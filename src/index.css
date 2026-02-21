@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand */
+  --color-primary: #92b566; /* Sage accent */
+  --color-primary-hover: #7fa457; /* Slightly deeper sage */
+
+  /* Surfaces */
+  --color-surface: #f0efea; /* Warm canvas */
+  --color-card: #ffffff; /* Clean white panels */
+
+  /* Neutrals */
+  --color-border: #d8d6cf; /* Warm divider */
+  --color-ink: #1f1f1d; /* Main text */
+  --color-muted: #6e6b64; /* Secondary text */
+}
