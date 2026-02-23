@@ -1,4 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import teethImg from "../assets/TeethWhiteningPicture2.webp";
+import skinImg from "../assets/FaceMaskWoman.png";
+import electrolysisImg from "../assets/Waxing.jpeg";
 
 type Section = {
   id: string;
@@ -6,7 +10,17 @@ type Section = {
   description?: string;
 };
 
+type ServiceItem = {
+  name: string;
+  description: string;
+  price?: string; // keep as string so you can do "$125" or "Starting at $..."
+  duration?: string; // "50 minutes", "1 hour", etc.
+  note?: string; // optional additional detail
+};
+
 export default function Services() {
+  const navigate = useNavigate();
+
   const sections: Section[] = useMemo(
     () => [
       {
@@ -16,28 +30,23 @@ export default function Services() {
       },
       {
         id: "skin",
-        label: "Skin Treatments",
+        label: "Skin",
         description: "Customized services for your skin goals.",
       },
 
-      // Skin sub-services (6)
+      // Skin sub-sections
       { id: "skin-facials", label: "Facials" },
       { id: "skin-dermaplaning", label: "Dermaplaning" },
-      { id: "skin-chemical-peels", label: "Chemical Peels" },
       { id: "skin-microneedling", label: "Microneedling" },
-      { id: "skin-led", label: "LED Therapy" },
-      { id: "skin-acne", label: "Acne Program" },
+      { id: "skin-chemical-peels", label: "Chemical Peels" },
 
-      {
-        id: "microblading",
-        label: "Microblading",
-        description: "Brow artistry + touch-up schedule.",
-      },
+      // Hair removal
+      { id: "electrolysis", label: "Electrolysis" },
     ],
     [],
   );
 
-  // Scrollspy: track which section is currently in view
+  // Scrollspy
   const [activeId, setActiveId] = useState<string>("teeth");
 
   useEffect(() => {
@@ -50,7 +59,6 @@ export default function Services() {
 
     const obs = new IntersectionObserver(
       (entries) => {
-        // Pick the entry closest to the top that is intersecting
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort(
@@ -61,10 +69,8 @@ export default function Services() {
         if (visible?.target?.id) setActiveId(visible.target.id);
       },
       {
-        // Tune this based on your header height (you have a fixed h-16 navbar)
-        root: null,
         threshold: [0.15, 0.25, 0.5],
-        rootMargin: "-80px 0px -65% 0px", // top offset + prefer the section near top
+        rootMargin: "-80px 0px -65% 0px",
       },
     );
 
@@ -75,18 +81,104 @@ export default function Services() {
   const goTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
-    // If you have a fixed navbar, you want scroll offset. Easiest: use scroll-mt on sections.
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  // Grouping: main categories + skin sub-services
   const main = sections.filter((s) =>
-    ["teeth", "skin", "microblading"].includes(s.id),
+    ["teeth", "skin", "electrolysis"].includes(s.id),
   );
-  const skinSubs = sections.filter((s) => s.id.startsWith("skin-"));
+
+  // ========= DATA =========
+
+  const TEETH: ServiceItem[] = [
+    {
+      name: "Teeth Whitening",
+      description:
+        "Tired of yellow or stained teeth? This treatment can whiten your teeth 4–7 shades in one visit. We offer different strengths depending on tooth and gum sensitivities.",
+      price: "$125",
+      duration: "90 minutes",
+      note: "2nd treatment (if needed): $99 • 60 minutes",
+    },
+  ];
+
+  const FACIALS: ServiceItem[] = [
+    {
+      name: "Skin Brightening Facial",
+      description:
+        "For dull or tired skin—designed to brighten, refresh, and restore glow.",
+      price: "$85",
+      duration: "50 minutes",
+    },
+    {
+      name: "Anti-Aging Facial",
+      description:
+        "Targets the appearance of fine lines and wrinkles with firming, smoothing support.",
+      price: "$85",
+      duration: "50 minutes",
+    },
+    {
+      name: "Acne Facial",
+      description:
+        "Deep cleansing and treatment-focused facial with at-home recommendations to support clearer skin.",
+      price: "$85",
+      duration: "50 minutes",
+    },
+    {
+      name: "Sensitive Skin Facial",
+      description:
+        "Gentle, effective products for skin that can’t tolerate harsh ingredients—calm, hydrate, and strengthen.",
+      price: "$85",
+      duration: "50 minutes",
+    },
+  ];
+
+  const DERMAPLANING: ServiceItem[] = [
+    {
+      name: "Dermaplaning Facial",
+      description:
+        "Combine any custom facial with dermaplaning (manual exfoliation) to remove dead skin cells and peach fuzz. Makeup applies smoother and skincare absorbs better.",
+      price: "$125",
+      duration: "1 hour",
+    },
+    {
+      name: "Go + Glow (Mini Facial + Dermaplaning)",
+      description: "A faster option for instant smoothness and glow.",
+      price: "$79",
+      duration: "30 minutes",
+    },
+  ];
+
+  const MICRONEEDLING: ServiceItem[] = [
+    {
+      name: "Microneedling Treatment",
+      description:
+        "Also known as collagen induction therapy—supports fine lines, skin tightening, acne scars, and pore appearance.",
+      price: "$175",
+      duration: "1 hour",
+      note: "Recommended monthly for 3–4 months for best results. (Claims about collagen % removed here for compliance/accuracy—add only if you can substantiate clinically.)",
+    },
+  ];
+
+  const PEELS: ServiceItem[] = [
+    {
+      name: "Chemical Peels",
+      description:
+        "Uses a chemical solution to exfoliate and peel layers to improve tone and texture. Can help with fine lines, acne, scars, melasma, freckles, age spots, discoloration, and other concerns.",
+      note: "Peel depth is determined by the concern being treated and your skin’s needs.",
+    },
+  ];
+
+  const ELECTROLYSIS: ServiceItem[] = [
+    {
+      name: "Electrolysis (Permanent Hair Removal)",
+      description:
+        "A hair removal method that works on all skin types and hair colors. Targets the root of the hair to permanently destroy it.",
+      note: "Number of treatments varies based on density of hair and size of the area.",
+    },
+  ];
 
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-24 pb-16 ">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-24 pb-16">
       {/* Mobile Table of Contents */}
       <div className="md:hidden mt-6 rounded-2xl border border-border bg-card/70 backdrop-blur overflow-hidden mb-8">
         <div className="px-4 py-3 border-b border-border">
@@ -97,7 +189,7 @@ export default function Services() {
           {[
             { id: "teeth", label: "Teeth" },
             { id: "skin", label: "Skin" },
-            { id: "microblading", label: "Microblading" },
+            { id: "electrolysis", label: "Electrolysis" },
           ].map((item) => (
             <button
               key={item.id}
@@ -109,7 +201,7 @@ export default function Services() {
               }
               className="text-left px-4 py-3 text-sm font-medium text-muted
                    transition border-b border-border last:border-b-0
-                   hover:text-ink hover:bg-primary/30"
+                   hover:text-ink hover:bg-primary/30 "
             >
               {item.label}
             </button>
@@ -133,7 +225,7 @@ export default function Services() {
                   type="button"
                   onClick={() => goTo(s.id)}
                   className={[
-                    "w-full text-left rounded-xl px-3 py-2 text-sm transition",
+                    "w-full text-left rounded-xl px-3 py-2 text-sm transition cursor-pointer",
                     activeId === s.id
                       ? "bg-primary/10 text-ink"
                       : "text-muted hover:text-ink hover:bg-card/60",
@@ -142,117 +234,117 @@ export default function Services() {
                   {s.label}
                 </button>
               ))}
-
-              <div className="mt-4 pt-3 border-t border-border">
-                <div className="text-xs font-semibold text-muted px-3 mb-2">
-                  Skin Treatments
-                </div>
-                <div className="space-y-1">
-                  {skinSubs.map((s) => (
-                    <button
-                      key={s.id}
-                      type="button"
-                      onClick={() => goTo(s.id)}
-                      className={[
-                        "w-full text-left rounded-xl px-3 py-2 text-sm transition",
-                        activeId === s.id
-                          ? "bg-primary/10 text-ink"
-                          : "text-muted hover:text-ink hover:bg-card/60",
-                      ].join(" ")}
-                    >
-                      {s.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </nav>
           </div>
         </aside>
 
         {/* Main content */}
         <main className="space-y-10">
-          {/* Top hero */}
+          {/* Page header */}
           <header className="rounded-3xl border border-border bg-card/60 backdrop-blur p-6 sm:p-8">
-            <h1 className="text-2xl sm:text-3xl font-semibold text-ink">
-              Services
-            </h1>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-semibold text-ink">
+                  Services
+                </h1>
+                <p className="mt-1 text-sm text-muted">
+                  Choose a category to learn more. Pricing and duration listed
+                  where applicable.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => navigate("/contact")}
+                className="cursor-pointer inline-flex items-center justify-center rounded-2xl border border-border bg-white px-4 py-2 text-sm font-semibold text-ink shadow-sm hover:bg-neutral-50 transition"
+              >
+                Ask a Question
+              </button>
+            </div>
           </header>
 
           {/* Teeth */}
-          <section id="teeth" className="scroll-mt-24">
+          <section id="teeth" className="scroll-mt-32 md:scroll-mt-24">
             <ServiceCard
               title="Teeth Whitening"
-              subtitle="Brighten your smile with safe, effective whitening."
-              bullets={[
-                "Ideal for events or ongoing maintenance",
-                "Aftercare guidance included",
-                "Discuss sensitivity and goals before we begin",
-              ]}
-            />
+              subtitle="You always wear your smile. Why not make it brighter?"
+              imageSrc={teethImg}
+              imageAlt="Teeth whitening treatment"
+            >
+              <ServiceList items={TEETH} />
+            </ServiceCard>
           </section>
 
-          {/* Skin main */}
-          <section id="skin" className="scroll-mt-24">
+          {/* Skin overview */}
+          <section id="skin" className="scroll-mt-32 md:scroll-mt-24">
             <ServiceCard
-              title="Skin Treatments"
-              subtitle="You’re already radiant on the inside, let your skin match."
-              bullets={[
-                "Personalized plan based on your skin goals",
-                "Professional-grade products + techniques",
-                "Results-focused with comfort in mind",
-              ]}
-            />
+              title="Skin"
+              subtitle="You’re already radiant on the inside—let your skin match."
+              imageSrc={skinImg}
+              imageAlt="Facial treatment in a clean clinic setting"
+            >
+              <p className="mt-2 text-sm text-muted">
+                We offer multiple facials and advanced treatments to help you
+                reach your skin goals.
+              </p>
+            </ServiceCard>
           </section>
 
-          {/* Skin sub-services */}
-          <section id="skin-facials" className="scroll-mt-24">
-            <MiniService
+          {/* Facials */}
+          <section id="skin-facials" className="scroll-mt-32 md:scroll-mt-24">
+            <SubSectionHeader
               title="Facials"
-              text="Deep cleanse, exfoliation, extractions (as needed), and hydration."
+              subtitle="Customized facials for glow, clarity, and long-term skin health."
             />
-          </section>
-          <section id="skin-dermaplaning" className="scroll-mt-24">
-            <MiniService
-              title="Dermaplaning"
-              text="Gentle exfoliation to smooth texture and enhance product absorption."
-            />
-          </section>
-          <section id="skin-chemical-peels" className="scroll-mt-24">
-            <MiniService
-              title="Chemical Peels"
-              text="Refine tone and texture with tailored peel strength and aftercare."
-            />
-          </section>
-          <section id="skin-microneedling" className="scroll-mt-24">
-            <MiniService
-              title="Microneedling"
-              text="Support collagen for texture, pores, and overall skin resilience."
-            />
-          </section>
-          <section id="skin-led" className="scroll-mt-24">
-            <MiniService
-              title="LED Therapy"
-              text="Calming light therapy to support recovery and reduce inflammation."
-            />
-          </section>
-          <section id="skin-acne" className="scroll-mt-24">
-            <MiniService
-              title="Acne Program"
-              text="Structured approach with consistent treatments + home care coaching."
-            />
+            <GridServiceList items={FACIALS} />
           </section>
 
-          {/* Microblading */}
-          <section id="microblading" className="scroll-mt-24">
-            <ServiceCard
-              title="Microblading"
-              subtitle="Natural-looking brows designed for your face."
-              bullets={[
-                "Consultation + shape mapping",
-                "Aftercare instructions and healing timeline",
-                "Touch-up scheduling guidance",
-              ]}
+          {/* Dermaplaning */}
+          <section
+            id="skin-dermaplaning"
+            className="scroll-mt-32 md:scroll-mt-24"
+          >
+            <SubSectionHeader
+              title="Dermaplaning"
+              subtitle="Manual exfoliation for smoother texture and better product absorption."
             />
+            <GridServiceList items={DERMAPLANING} />
+          </section>
+
+          {/* Microneedling */}
+          <section
+            id="skin-microneedling"
+            className="scroll-mt-32 md:scroll-mt-24"
+          >
+            <SubSectionHeader
+              title="Microneedling"
+              subtitle="Collagen-supporting treatment for texture, pores, and scarring concerns."
+            />
+            <GridServiceList items={MICRONEEDLING} />
+          </section>
+
+          {/* Chemical Peels */}
+          <section
+            id="skin-chemical-peels"
+            className="scroll-mt-32 md:scroll-mt-24"
+          >
+            <SubSectionHeader
+              title="Chemical Peels"
+              subtitle="Refine tone and texture with peel depth tailored to your skin."
+            />
+            <GridServiceList items={PEELS} />
+          </section>
+
+          {/* Electrolysis */}
+          <section id="electrolysis" className="scroll-mt-32 md:scroll-mt-24">
+            <ServiceCard
+              title="Electrolysis"
+              subtitle="Permanent hair removal for all skin types and hair colors."
+              imageSrc={electrolysisImg}
+              imageAlt="Electrolysis hair removal treatment"
+            >
+              <ServiceList items={ELECTROLYSIS} />
+            </ServiceCard>
           </section>
         </main>
       </div>
@@ -263,33 +355,129 @@ export default function Services() {
 function ServiceCard({
   title,
   subtitle,
-  bullets,
+  imageSrc,
+  imageAlt,
+  children,
 }: {
   title: string;
   subtitle: string;
-  bullets: string[];
+  imageSrc?: string;
+  imageAlt?: string;
+  children?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-3xl border border-border bg-card/60 backdrop-blur p-6 sm:p-8">
-      <h2 className="text-xl sm:text-2xl font-semibold text-ink">{title}</h2>
-      <p className="mt-2 text-muted">{subtitle}</p>
-      <ul className="mt-4 space-y-2 text-sm text-ink/90">
-        {bullets.map((b) => (
-          <li key={b} className="flex gap-2">
-            <span className="mt-2 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
-            <span>{b}</span>
-          </li>
-        ))}
-      </ul>
+    <div className="rounded-3xl border border-border bg-card/60 backdrop-blur overflow-hidden">
+      {/* Mobile image (top of card) */}
+      {imageSrc && (
+        <div className="relative h-48 sm:h-56 md:h-90 lg:h-100 w-full  ">
+          <img
+            src={imageSrc}
+            alt={imageAlt ?? title}
+            className="h-full w-full object-cover bg-white"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+        </div>
+      )}
+
+      <div className="p-6 sm:p-8">
+        <h2 className="text-xl sm:text-2xl font-semibold text-ink">{title}</h2>
+        <p className="mt-2 text-muted">{subtitle}</p>
+
+        {/* Desktop image (moved down with spacing) */}
+
+        {children}
+      </div>
     </div>
   );
 }
 
-function MiniService({ title, text }: { title: string; text: string }) {
+function SubSectionHeader({
+  title,
+  subtitle,
+}: {
+  title: string;
+  subtitle: string;
+}) {
   return (
-    <div className="rounded-2xl border border-border bg-surface/60 backdrop-blur p-5">
-      <h3 className="text-base font-semibold text-ink">{title}</h3>
-      <p className="mt-1 text-sm text-muted">{text}</p>
+    <div className="rounded-3xl border border-border bg-card/60 backdrop-blur p-6 sm:p-8">
+      <h3 className="text-lg sm:text-xl font-semibold text-ink">{title}</h3>
+      <p className="mt-2 text-sm text-muted">{subtitle}</p>
+    </div>
+  );
+}
+
+function ServiceList({ items }: { items: ServiceItem[] }) {
+  return (
+    <div className="mt-5 space-y-4">
+      {items.map((item) => (
+        <div
+          key={item.name}
+          className="rounded-2xl border border-border bg-white/60 p-5"
+        >
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <div className="text-base font-semibold text-ink">
+                {item.name}
+              </div>
+              <p className="mt-1 text-sm text-muted">{item.description}</p>
+            </div>
+
+            {(item.price || item.duration) && (
+              <div className="shrink-0 rounded-xl border border-border bg-card/60 px-3 py-2 text-sm">
+                {item.price && (
+                  <div className="font-semibold text-ink">{item.price}</div>
+                )}
+                {item.duration && (
+                  <div className="text-xs text-muted">{item.duration}</div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {item.note && <p className="mt-3 text-xs text-muted">{item.note}</p>}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Grid layout is the key for "Skin has more than Teeth":
+ * - Teeth can be 1–2 cards and still look intentional.
+ * - Skin can show many offerings without becoming a long wall of text.
+ */
+function GridServiceList({ items }: { items: ServiceItem[] }) {
+  return (
+    <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {items.map((item) => (
+        <div
+          key={item.name}
+          className="rounded-2xl border border-border bg-white/60 p-5"
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <div className="text-base font-semibold text-ink">
+                {item.name}
+              </div>
+              <p className="mt-1 text-sm text-muted">{item.description}</p>
+            </div>
+            {(item.price || item.duration) && (
+              <div className="shrink-0 text-right">
+                {item.price && (
+                  <div className="text-sm font-semibold text-ink">
+                    {item.price}
+                  </div>
+                )}
+                {item.duration && (
+                  <div className="text-xs text-muted">{item.duration}</div>
+                )}
+              </div>
+            )}
+          </div>
+          {item.note && <p className="mt-3 text-xs text-muted">{item.note}</p>}
+        </div>
+      ))}
     </div>
   );
 }

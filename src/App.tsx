@@ -2,13 +2,13 @@ import Navbar from "./Components/Navbar";
 import { Routes, Route } from "react-router-dom";
 
 import Home from "./Pages/HomePage";
-import About from "./Pages/AboutPage";
+import AboutPage from "./Pages/AboutPage";
 import Services from "./Pages/ServicesPage";
 import Contact from "./Pages/ContactPage";
 
 const routes = [
   { path: "/", element: <Home /> },
-  { path: "/about", element: <About /> },
+  { path: "/about", element: <AboutPage /> },
   { path: "/services", element: <Services /> },
   { path: "/contact", element: <Contact /> },
 ];
