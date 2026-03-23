@@ -16,7 +16,6 @@ type FormState = {
 };
 
 export default function Contact() {
-  // ✅ Set this to your Cloudflare Worker endpoint, e.g.:
   // https://bskinandbody-contact.your-subdomain.workers.dev/api/contact
   const CONTACT_ENDPOINT = useMemo(
     () => import.meta.env.VITE_CONTACT_ENDPOINT as string | undefined,
@@ -47,7 +46,7 @@ export default function Contact() {
     if (!form.firstName.trim()) return "Please enter your first name.";
     if (!form.lastName.trim()) return "Please enter your last name.";
     if (!form.email.trim()) return "Please enter your email address.";
-    // lightweight email check
+    //email check
     if (!/^\S+@\S+\.\S+$/.test(form.email.trim()))
       return "Please enter a valid email address.";
     if (!form.message.trim()) return "Please enter a message.";
@@ -73,15 +72,12 @@ export default function Contact() {
       const res = await fetch(CONTACT_ENDPOINT!, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // send metadata + form payload
         body: JSON.stringify({
           firstName: form.firstName.trim(),
           lastName: form.lastName.trim(),
           email: form.email.trim(),
           message: form.message.trim(),
           source: "website-contact-form",
-          // Optional: add page URL if you want
-          // pageUrl: window.location.href,
         }),
       });
 

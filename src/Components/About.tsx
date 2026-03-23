@@ -77,7 +77,6 @@ export default function AboutPage() {
               </p>
             </div>
 
-            {/* Optional: small CTA row */}
             <div className="pt-2 flex flex-col gap-3 sm:flex-row">
               <a
                 href="/services"
@@ -106,7 +105,6 @@ export default function AboutPage() {
               />
             </div>
 
-            {/* Optional info card under portrait */}
             <div className="mt-4 rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm">
               <p className="text-sm font-semibold">Meet Your Provider</p>
               <p className="mt-1 text-sm text-neutral-600">

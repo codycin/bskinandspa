@@ -34,7 +34,6 @@ export function BackToTopButton() {
       ].join(" ")}
       style={{ padding: "10px 12px" }}
     >
-      {/* simple chevron-up icon (no library) */}
       <svg
         width="18"
         height="18"
