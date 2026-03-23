@@ -160,7 +160,7 @@ export default function Navbar() {
         >
           {/* Drawer header */}
           <div className="h-16 px-4 flex items-center border-b border-border">
-            {/* Left: logos (allowed to shrink, cannot overlap) */}
+            {/*left logo */}
             <div className="flex items-center gap-2 leading-none flex-1 min-w-0 overflow-hidden">
               <img
                 src={icon}
@@ -174,7 +174,7 @@ export default function Navbar() {
               />
             </div>
 
-            {/* Right: close (always reserved space) */}
+            {/* Right */}
             <button
               type="button"
               aria-label="Close menu"
@@ -208,7 +208,6 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Optional: Book Now inside drawer for mobile */}
           <div className="flex gap-5 items-center mt-auto p-4 border-t border-border text-muted">
             <Socials />
 

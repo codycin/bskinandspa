@@ -1,8 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import teethImg from "../assets/TeethWhiteningPicture2.webp";
 import skinImg from "../assets/FaceMaskWoman.png";
-import electrolysisImg from "../assets/Waxing.jpeg";
+import electrolysisImg from "../assets/Electrolysis.webp";
+import chemicalPeel from "../Assets/ChemicalPeel.webp";
+import dermaplaningImg from "../Assets/Dermaplaning.webp";
+import dermaplaning2 from "../Assets/Dermaplaning2.webp";
+import microneedlingBA from "../Assets/MicroneedlingBA.webp";
+import SkinScript from "./SkinScript";
+
+const BOOKING_URL =
+  "https://thepalmsdayspa.mysalononline.com/Booking/?sid=0&guid=a057c4c1-3a24-463e-a2a5-a43ce593a20a&customerId=32864";
 
 type Section = {
   id: string;
@@ -11,11 +19,13 @@ type Section = {
 };
 
 type ServiceItem = {
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
   price?: string; // keep as string so you can do "$125" or "Starting at $..."
   duration?: string; // "50 minutes", "1 hour", etc.
   note?: string; // optional additional detail
+  highlights?: string[];
+  imageSrc?: string;
 };
 
 export default function Services() {
@@ -42,11 +52,29 @@ export default function Services() {
 
       // Hair removal
       { id: "electrolysis", label: "Electrolysis" },
+      { id: "skinscript", label: "Skin Script" },
     ],
     [],
   );
 
   // Scrollspy
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!location.hash) return;
+
+    const id = location.hash.replace("#", "");
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    // small delay ensures layout/images have rendered
+    const t = window.setTimeout(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+
+    return () => window.clearTimeout(t);
+  }, [location.hash]);
+
   const [activeId, setActiveId] = useState<string>("teeth");
 
   useEffect(() => {
@@ -85,96 +113,210 @@ export default function Services() {
   };
 
   const main = sections.filter((s) =>
-    ["teeth", "skin", "electrolysis"].includes(s.id),
+    ["teeth", "skin", "electrolysis", "skinscript"].includes(s.id),
   );
 
   // ========= DATA =========
 
+  // TEETH
   const TEETH: ServiceItem[] = [
     {
       name: "Teeth Whitening",
       description:
-        "Tired of yellow or stained teeth? This treatment can whiten your teeth 4–7 shades in one visit. We offer different strengths depending on tooth and gum sensitivities.",
+        "A safe, effective in-office treatment designed to visibly whiten your smile using professional-grade solutions.",
       price: "$125",
       duration: "90 minutes",
-      note: "2nd treatment (if needed): $99 • 60 minutes",
+      note: "Touch-up (if needed): $99 • 60 minutes",
+      highlights: [
+        "Professional-grade whitening solutions for enhanced results",
+        "Quick, comfortable in-office treatment",
+        "Helps remove stains from coffee, tea, wine, smoking, and aging",
+        "Ideal before special events, photos, or celebrations",
+      ],
     },
   ];
 
+  // FACIALS (keep your “types” but add the general facial benefits)
+  // If your UI shows 4 facial types, this keeps them while still meeting the new “Facials:” requirements.
   const FACIALS: ServiceItem[] = [
     {
       name: "Skin Brightening Facial",
       description:
-        "For dull or tired skin—designed to brighten, refresh, and restore glow.",
+        "Personalized facial designed to brighten, refresh, and restore glow based on your skin’s needs.",
       price: "$85",
       duration: "50 minutes",
+      highlights: [
+        "Deeply cleanses, exfoliates, and nourishes the skin",
+        "Helps restore hydration and balance",
+        "Reduces congestion and breakouts",
+        "Suitable for all skin types",
+        "Improves skin tone and texture",
+      ],
     },
     {
       name: "Anti-Aging Facial",
       description:
-        "Targets the appearance of fine lines and wrinkles with firming, smoothing support.",
+        "Personalized facial targeting fine lines and supporting firmer, smoother-looking skin.",
       price: "$85",
       duration: "50 minutes",
+      highlights: [
+        "Deeply cleanses, exfoliates, and nourishes the skin",
+        "Helps restore hydration and balance",
+        "Suitable for all skin types",
+        "Improves skin tone and texture",
+      ],
     },
     {
       name: "Acne Facial",
       description:
-        "Deep cleansing and treatment-focused facial with at-home recommendations to support clearer skin.",
+        "Treatment-focused facial to reduce congestion and support clearer-looking skin.",
       price: "$85",
       duration: "50 minutes",
+      highlights: [
+        "Deeply cleanses and exfoliates to reduce congestion",
+        "Helps reduce breakouts",
+        "Supports hydration and balance",
+        "Improves skin tone and texture",
+      ],
     },
     {
       name: "Sensitive Skin Facial",
       description:
-        "Gentle, effective products for skin that can’t tolerate harsh ingredients—calm, hydrate, and strengthen.",
+        "Gentle, personalized facial designed to calm, hydrate, and support the skin barrier.",
       price: "$85",
       duration: "50 minutes",
+      highlights: [
+        "Personalized for sensitive/reactive skin",
+        "Helps restore hydration and balance",
+        "Suitable for all skin types",
+        "Improves skin tone and texture",
+      ],
     },
   ];
 
+  // DERMAPLANING
   const DERMAPLANING: ServiceItem[] = [
     {
       name: "Dermaplaning Facial",
       description:
-        "Combine any custom facial with dermaplaning (manual exfoliation) to remove dead skin cells and peach fuzz. Makeup applies smoother and skincare absorbs better.",
-      price: "$125",
-      duration: "1 hour",
+        "Instant exfoliation + peach fuzz removal for smoother makeup application and better skincare absorption.",
+      price: "$135",
+      duration: "60 minutes",
+      highlights: [
+        "Instantly reveals brighter, smoother, more radiant skin",
+        "Improves skin texture and tone",
+        "Zero downtime",
+        "Safe for most skin types",
+        "Enhances product absorption",
+        "Smoother makeup application",
+      ],
     },
     {
-      name: "Go + Glow (Mini Facial + Dermaplaning)",
-      description: "A faster option for instant smoothness and glow.",
-      price: "$79",
-      duration: "30 minutes",
+      imageSrc: dermaplaning2,
     },
   ];
 
+  // MICRONEEDLING
   const MICRONEEDLING: ServiceItem[] = [
     {
       name: "Microneedling Treatment",
       description:
-        "Also known as collagen induction therapy—supports fine lines, skin tightening, acne scars, and pore appearance.",
+        "Collagen induction treatment to support smoother texture, firmer-looking skin, and a more even complexion.",
       price: "$175",
-      duration: "1 hour",
-      note: "Recommended monthly for 3–4 months for best results. (Claims about collagen % removed here for compliance/accuracy—add only if you can substantiate clinically.)",
+      duration: "60 minutes",
+      highlights: [
+        "Improves overall texture, tone, and firmness",
+        "Softens the appearance of fine lines and wrinkles",
+        "Helps reduce acne and other types of scarring",
+        "Minimizes the appearance of large pores",
+        "Natural collagen stimulation",
+        "More even complexion",
+      ],
+      note: "Recommended in a series for best results (your provider will guide timing).",
+    },
+    {
+      name: "Microneedling with Exosomes",
+      description:
+        "Microneedling paired with exosomes for enhanced skin-support benefits and a boosted glow-focused finish.",
+      price: "$250",
+      duration: "60 minutes",
+      highlights: [
+        "Improves overall texture, tone, and firmness",
+        "Supports a more even complexion",
+        "Targets the look of fine lines, pores, and scarring",
+        "Glow-forward enhancement",
+      ],
+      note: "Ask about ideal candidacy and recommended treatment series.",
     },
   ];
 
+  // CHEMICAL PEELS
   const PEELS: ServiceItem[] = [
     {
-      name: "Chemical Peels",
+      name: "Chemical Peel",
       description:
-        "Uses a chemical solution to exfoliate and peel layers to improve tone and texture. Can help with fine lines, acne, scars, melasma, freckles, age spots, discoloration, and other concerns.",
-      note: "Peel depth is determined by the concern being treated and your skin’s needs.",
+        "Targeted exfoliation to improve clarity, tone, and overall radiance—strength selected based on your skin goals.",
+      price: "$115",
+      highlights: [
+        "Fades hyperpigmentation, sun damage, and dark spots",
+        "Softens the appearance of fine lines and wrinkles",
+        "Improves skin texture, tone, and overall clarity",
+        "Improved radiance and glow",
+        "Available in light, medium, and advanced strengths",
+      ],
+      note: "Peel depth is chosen based on your skin and the concern being treated.",
     },
   ];
 
+  // ELECTROLYSIS (pricing tiers as separate items keeps it super readable on mobile)
   const ELECTROLYSIS: ServiceItem[] = [
     {
-      name: "Electrolysis (Permanent Hair Removal)",
+      name: "Electrolysis",
       description:
-        "A hair removal method that works on all skin types and hair colors. Targets the root of the hair to permanently destroy it.",
-      note: "Number of treatments varies based on density of hair and size of the area.",
+        "Permanent hair removal using an FDA-approved method that disables the follicle’s ability to regrow hair.",
+      price: "$40 / 15 minutes",
+      highlights: [
+        "FDA-approved method of permanent hair removal",
+        "Permanently destroys the follicle’s ability to regrow hair",
+        "Can treat almost anywhere on the face or body",
+        "Effective on all hair colors and skin types",
+      ],
+      note: "Longer sessions available. Number of sessions varies by area, density, and growth cycle.",
     },
+  ];
+
+  const FACIALS_HIGHLIGHTS = [
+    "Personalized treatment designed for your unique skin needs",
+    "Deeply cleanses, exfoliates, and nourishes the skin",
+    "Reduces congestion and breakouts",
+    "Suitable for all skin types",
+    "Helps restore hydration and balance",
+    "Improves skin tone and texture",
+  ];
+  const DERMAPLANING_HIGHLIGHTS = [
+    "Instantly reveals brighter, smoother, more radiant skin",
+    "Improves skin texture and tone",
+    "Zero downtime",
+    "Safe for most skin types",
+    "Enhances product absorption",
+    "Smoother makeup application",
+  ];
+
+  const MICRONEEDLING_HIGHLIGHTS = [
+    "Improves overall texture, tone, and firmness",
+    "Softens the appearance of fine lines and wrinkles",
+    "Helps reduce acne and other types of scarring",
+    "Minimizes the appearance of large pores",
+    "Natural collagen stimulation",
+    "More even complexion",
+  ];
+
+  const PEELS_HIGHLIGHTS = [
+    "Fades hyperpigmentation, sun damage, and dark spots",
+    "Softens the appearance of fine lines and wrinkles",
+    "Improves skin texture, tone, and overall clarity",
+    "Improved radiance and glow",
+    "Available in light, medium, and advanced strengths",
   ];
 
   return (
@@ -190,6 +332,7 @@ export default function Services() {
             { id: "teeth", label: "Teeth" },
             { id: "skin", label: "Skin" },
             { id: "electrolysis", label: "Electrolysis" },
+            { id: "skinscript", label: "Skin Script" },
           ].map((item) => (
             <button
               key={item.id}
@@ -282,12 +425,7 @@ export default function Services() {
               subtitle="You’re already radiant on the inside—let your skin match."
               imageSrc={skinImg}
               imageAlt="Facial treatment in a clean clinic setting"
-            >
-              <p className="mt-2 text-sm text-muted">
-                We offer multiple facials and advanced treatments to help you
-                reach your skin goals.
-              </p>
-            </ServiceCard>
+            ></ServiceCard>
           </section>
 
           {/* Facials */}
@@ -295,6 +433,7 @@ export default function Services() {
             <SubSectionHeader
               title="Facials"
               subtitle="Customized facials for glow, clarity, and long-term skin health."
+              highlights={FACIALS_HIGHLIGHTS}
             />
             <GridServiceList items={FACIALS} />
           </section>
@@ -307,7 +446,11 @@ export default function Services() {
             <SubSectionHeader
               title="Dermaplaning"
               subtitle="Manual exfoliation for smoother texture and better product absorption."
+              highlights={DERMAPLANING_HIGHLIGHTS}
+              imageAlt="Dermaplaning for clear skin"
+              imageSrc={dermaplaningImg}
             />
+
             <GridServiceList items={DERMAPLANING} />
           </section>
 
@@ -319,8 +462,25 @@ export default function Services() {
             <SubSectionHeader
               title="Microneedling"
               subtitle="Collagen-supporting treatment for texture, pores, and scarring concerns."
+              highlights={MICRONEEDLING_HIGHLIGHTS}
             />
             <GridServiceList items={MICRONEEDLING} />
+            <div className="mt-6 rounded-2xl border border-border bg-white/60 p-4 sm:p-5">
+              <div className="mb-3">
+                <div className="text-sm font-semibold text-ink">
+                  Microneedling Before and After
+                </div>
+              </div>
+
+              <div className="relative w-full rounded-xl overflow-hidden">
+                <img
+                  src={microneedlingBA}
+                  alt="Microneedling before and after results"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            </div>
           </section>
 
           {/* Chemical Peels */}
@@ -331,7 +491,11 @@ export default function Services() {
             <SubSectionHeader
               title="Chemical Peels"
               subtitle="Refine tone and texture with peel depth tailored to your skin."
+              highlights={PEELS_HIGHLIGHTS}
+              imageSrc={chemicalPeel}
+              imageAlt="Chemical peel for skincare"
             />
+
             <GridServiceList items={PEELS} />
           </section>
 
@@ -345,6 +509,9 @@ export default function Services() {
             >
               <ServiceList items={ELECTROLYSIS} />
             </ServiceCard>
+          </section>
+          <section id="skinscript" className="scroll-mt-32 md:scroll-mt-24">
+            <SkinScript />
           </section>
         </main>
       </div>
@@ -366,26 +533,24 @@ function ServiceCard({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-3xl border border-border bg-card/60 backdrop-blur overflow-hidden">
-      {/* Mobile image (top of card) */}
-      {imageSrc && (
-        <div className="relative h-48 sm:h-56 md:h-90 lg:h-100 w-full  ">
-          <img
-            src={imageSrc}
-            alt={imageAlt ?? title}
-            className="h-full w-full object-cover bg-white"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-        </div>
-      )}
-
+    <div className="rounded-3xl border border-border bg-card/60 backdrop-blur">
       <div className="p-6 sm:p-8">
         <h2 className="text-xl sm:text-2xl font-semibold text-ink">{title}</h2>
         <p className="mt-2 text-muted">{subtitle}</p>
 
-        {/* Desktop image (moved down with spacing) */}
-
+        {imageSrc && (
+          <div className="mt-6">
+            <div className="relative w-full min-h-[260px] sm:min-h-[320px] md:min-h-[380px] lg:min-h-[460px] rounded-3xl overflow-hidden border border-border bg-white">
+              <img
+                src={imageSrc}
+                alt={imageAlt ?? title}
+                className="absolute inset-0 h-full w-full object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            </div>
+          </div>
+        )}
         {children}
       </div>
     </div>
@@ -395,89 +560,217 @@ function ServiceCard({
 function SubSectionHeader({
   title,
   subtitle,
+  highlights,
+  imageSrc,
+  imageAlt,
 }: {
   title: string;
   subtitle: string;
+  highlights?: string[];
+  imageSrc?: string;
+  imageAlt?: string;
 }) {
   return (
-    <div className="rounded-3xl border border-border bg-card/60 backdrop-blur p-6 sm:p-8">
-      <h3 className="text-lg sm:text-xl font-semibold text-ink">{title}</h3>
-      <p className="mt-2 text-sm text-muted">{subtitle}</p>
+    <div className="rounded-3xl border border-border bg-card/60 backdrop-blur overflow-hidden">
+      <div className="flex flex-col md:flex-row gap-6 p-6 sm:p-8 items-stretch">
+        {/* TEXT */}
+        <div className="flex-1 flex flex-col justify-between">
+          <div>
+            <h3 className="text-lg sm:text-xl font-semibold text-ink">
+              {title}
+            </h3>
+            <p className="mt-2 text-sm text-muted">{subtitle}</p>
+
+            <Highlights items={highlights} />
+          </div>
+
+          {/* Button inside text column keeps alignment clean */}
+          <div className="mt-6">
+            <a
+              href={BOOKING_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center rounded-full bg-primary px-3 py-2
+                text-sm font-semibold text-white shadow-sm transition hover:bg-primary-hover"
+            >
+              Book Now
+            </a>
+          </div>
+        </div>
+
+        {/* IMAGE */}
+        {imageSrc && (
+          <div className="flex-1 max-w-md">
+            <div className="relative w-full h-full min-h-[220px] rounded-2xl overflow-hidden">
+              <img
+                src={imageSrc}
+                alt={imageAlt ?? title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
+  );
+}
+function Highlights({ items }: { items?: string[] }) {
+  if (!items?.length) return null;
+
+  return (
+    <ul className="mt-3 space-y-1 text-sm text-muted">
+      {items.map((h) => (
+        <li key={h} className="flex gap-2">
+          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/80" />
+          <span>{h}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
 
 function ServiceList({ items }: { items: ServiceItem[] }) {
   return (
     <div className="mt-5 space-y-4">
-      {items.map((item) => (
-        <div
-          key={item.name}
-          className="rounded-2xl border border-border bg-white/60 p-5"
-        >
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <div className="text-base font-semibold text-ink">
-                {item.name}
+      {items.map((item) => {
+        // 🔥 IMAGE CARD VERSION
+        if (item.imageSrc) {
+          return (
+            <div
+              key={item.name}
+              className="rounded-2xl border border-border overflow-hidden"
+            >
+              <div className="relative w-full aspect-[4/3]">
+                <img
+                  src={item.imageSrc}
+                  alt={item.name}
+                  className="absolute inset-0 block h-full w-full object-cover"
+                  loading="lazy"
+                />
+
+                {/* Optional overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+
+                {/* Optional text overlay */}
+                <div className="absolute bottom-3 left-4 right-4 text-white">
+                  <div className="font-semibold">{item.name}</div>
+                  {item.description && (
+                    <p className="text-xs opacity-90">{item.description}</p>
+                  )}
+                </div>
               </div>
-              <p className="mt-1 text-sm text-muted">{item.description}</p>
+            </div>
+          );
+        }
+
+        // 🔹 NORMAL CARD VERSION
+        return (
+          <div
+            key={item.name}
+            className="rounded-2xl border border-border bg-white/60 p-5"
+          >
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <div className="text-base font-semibold text-ink">
+                  {item.name}
+                </div>
+                <p className="mt-1 text-sm text-muted">{item.description}</p>
+                <Highlights items={item.highlights} />
+              </div>
+
+              {(item.price || item.duration) && (
+                <div className="shrink-0 rounded-xl border border-border bg-card/60 px-3 py-2 text-sm">
+                  {item.price && (
+                    <div className="font-semibold text-ink">{item.price}</div>
+                  )}
+                  {item.duration && (
+                    <div className="text-xs text-muted">{item.duration}</div>
+                  )}
+                </div>
+              )}
             </div>
 
-            {(item.price || item.duration) && (
-              <div className="shrink-0 rounded-xl border border-border bg-card/60 px-3 py-2 text-sm">
-                {item.price && (
-                  <div className="font-semibold text-ink">{item.price}</div>
-                )}
-                {item.duration && (
-                  <div className="text-xs text-muted">{item.duration}</div>
-                )}
-              </div>
+            {item.note && (
+              <p className="mt-3 text-xs text-muted">{item.note}</p>
             )}
-          </div>
 
-          {item.note && <p className="mt-3 text-xs text-muted">{item.note}</p>}
-        </div>
-      ))}
+            <div className="mt-6 flex justify-end">
+              <a
+                href={BOOKING_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center rounded-full bg-primary px-2.5 py-2.5
+                text-sm font-semibold text-white shadow-sm transition hover:bg-primary-hover"
+              >
+                Book Now
+              </a>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-/**
- * Grid layout is the key for "Skin has more than Teeth":
- * - Teeth can be 1–2 cards and still look intentional.
- * - Skin can show many offerings without becoming a long wall of text.
- */
 function GridServiceList({ items }: { items: ServiceItem[] }) {
   return (
     <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-      {items.map((item) => (
-        <div
-          key={item.name}
-          className="rounded-2xl border border-border bg-white/60 p-5"
-        >
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <div className="text-base font-semibold text-ink">
-                {item.name}
+      {items.map((item) => {
+        // 🔥 IMAGE CARD
+        if (item.imageSrc) {
+          return (
+            <div
+              key={item.name}
+              className="rounded-2xl border border-border overflow-hidden bg-white/60"
+            >
+              <div className="relative w-full aspect-[4/3]">
+                <img
+                  src={item.imageSrc}
+                  alt={item.name}
+                  className="absolute inset-0 block h-full w-full object-cover"
+                  loading="lazy"
+                />
               </div>
-              <p className="mt-1 text-sm text-muted">{item.description}</p>
             </div>
-            {(item.price || item.duration) && (
-              <div className="shrink-0 text-right">
-                {item.price && (
-                  <div className="text-sm font-semibold text-ink">
-                    {item.price}
-                  </div>
-                )}
-                {item.duration && (
-                  <div className="text-xs text-muted">{item.duration}</div>
-                )}
+          );
+        }
+
+        // 🔹 NORMAL GRID CARD
+        return (
+          <div
+            key={item.name}
+            className="rounded-2xl border border-border bg-white/60 p-5"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <div className="text-base font-semibold text-ink">
+                  {item.name}
+                </div>
+                <p className="mt-1 text-sm text-muted">{item.description}</p>
               </div>
+
+              {(item.price || item.duration) && (
+                <div className="shrink-0 text-right">
+                  {item.price && (
+                    <div className="text-sm font-semibold text-ink">
+                      {item.price}
+                    </div>
+                  )}
+                  {item.duration && (
+                    <div className="text-xs text-muted">{item.duration}</div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {item.note && (
+              <p className="mt-3 text-xs text-muted">{item.note}</p>
             )}
           </div>
-          {item.note && <p className="mt-3 text-xs text-muted">{item.note}</p>}
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

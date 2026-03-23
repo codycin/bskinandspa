@@ -4,13 +4,14 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./Pages/HomePage";
 import AboutPage from "./Pages/AboutPage";
 import Services from "./Pages/ServicesPage";
-import Contact from "./Pages/ContactPage";
+import ContactPage from "./Pages/ContactPage";
+import Footer from "./Components/Footer";
 
 const routes = [
   { path: "/", element: <Home /> },
   { path: "/about", element: <AboutPage /> },
   { path: "/services", element: <Services /> },
-  { path: "/contact", element: <Contact /> },
+  { path: "/contact", element: <ContactPage /> },
 ];
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
           <Route key={path} path={path} element={element} />
         ))}
       </Routes>
+      <Footer />
     </>
   );
 }

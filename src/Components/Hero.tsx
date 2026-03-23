@@ -16,7 +16,6 @@ export default function Hero() {
           src={towl}
           alt="Spa towels"
           className="absolute insert-0 h-full w-full object-cover object-[25%_50%]"
-          //className="absolute inset-0 h-full w-full object-cover sm:object-bottom-left"
         />
 
         {/* Overlay */}
