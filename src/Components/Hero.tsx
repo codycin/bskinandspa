@@ -32,17 +32,12 @@ export default function Hero() {
           <div className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-2">
             {/* Left Side – Copy */}
             <div className="max-w-xl">
-              <p className="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs font-medium tracking-wide text-neutral-600">
-                Medical Esthetics • Laser Hair Removal
-              </p>
-
               <h1 className="mt-5 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-                Advanced Esthetics. Proven Results.
+                Elevated aesthetics, within reach.
               </h1>
 
               <p className="mt-4 text-base leading-relaxed text-neutral-600 sm:text-lg">
-                Specializing in laser hair removal and corrective skincare using
-                evidence-based treatments customized to your goals.
+                Medical Esthetics & Permanent Hair Removal
               </p>
 
               {/* Buttons */}
@@ -75,10 +70,7 @@ export default function Hero() {
                   <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                   Safe for All Skin Types
                 </span>
-                <span className="inline-flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                  Modern Laser Systems
-                </span>
+
                 <span className="inline-flex items-center gap-2">
                   <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                   Personalized Care
