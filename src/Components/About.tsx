@@ -1,7 +1,8 @@
+import { Link } from "react-router-dom";
 import portrait from "../Assets/Portrait.webp";
 
 const BOOKING_URL =
-  "https://thepalmsdayspa.mysalononline.com/Booking/?sid=0&guid=a057c4c1-3a24-463e-a2a5-a43ce593a20a&customerId=32864";
+  "https://www.fresha.com/book-now/b-skin-and-body-ch9ut76c/all-offer?share=true&pId=2843485";
 
 export default function AboutPage() {
   return (
@@ -34,6 +35,7 @@ export default function AboutPage() {
               src={portrait}
               alt="Brandi Concolino - Provider portrait"
               className="h-auto w-full object-cover"
+              loading="eager"
             />
           </div>
 
@@ -127,16 +129,17 @@ export default function AboutPage() {
 
           {/* Action Buttons */}
           <div className="mt-12 flex flex-col gap-3 sm:flex-row">
-            <a
-              href="/services"
+            {/* FIXED: Swapped <a> for <Link> */}
+            <Link
+              to="/services"
               className="inline-flex items-center justify-center rounded-2xl border border-neutral-200 bg-white px-6 py-3.5 text-sm font-semibold text-neutral-900 shadow-sm hover:bg-neutral-50 transition"
             >
               Explore Treatments
-            </a>
+            </Link>
             <a
               href={BOOKING_URL}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-2xl bg-primary px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition"
             >
               Schedule a Consultation

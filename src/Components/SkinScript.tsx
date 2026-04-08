@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import imageSrc from "../Assets/SkincareProduct.webp";
 
 export default function SkinScript() {
@@ -42,13 +43,14 @@ export default function SkinScript() {
             </div>
 
             <div className="mt-6">
-              <a
-                href="/contact"
+              {/* Swapped <a> tag for React Router's <Link> to prevent full page reloads */}
+              <Link
+                to="/contact"
                 className="inline-flex items-center justify-center rounded-full bg-primary px-4 py-2
                 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-hover"
               >
                 Ask About Products
-              </a>
+              </Link>
             </div>
           </div>
 

@@ -1,28 +1,42 @@
-import Navbar from "./Components/Navbar";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
+// Components
+import Navbar from "./Components/Navbar";
+import Footer from "./Components/Footer";
+import { BackToTopButton } from "./Components/BackToTopButton";
+
+// Pages
 import Home from "./Pages/HomePage";
 import AboutPage from "./Pages/AboutPage";
 import Services from "./Pages/ServicesPage";
 import ContactPage from "./Pages/ContactPage";
-import Footer from "./Components/Footer";
 
-const routes = [
-  { path: "/", element: <Home /> },
-  { path: "/about", element: <AboutPage /> },
-  { path: "/services", element: <Services /> },
-  { path: "/contact", element: <ContactPage /> },
-];
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 export default function App() {
   return (
     <>
+      <ScrollToTop />
       <Navbar />
-      <Routes>
-        {routes.map(({ path, element }) => (
-          <Route key={path} path={path} element={element} />
-        ))}
-      </Routes>
+
+      <main className="min-h-screen">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/contact" element={<ContactPage />} />
+        </Routes>
+      </main>
+      <BackToTopButton />
       <Footer />
     </>
   );
