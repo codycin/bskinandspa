@@ -92,7 +92,7 @@ export default function AboutPage() {
                 <li className="flex gap-3">
                   <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                   <span>
-                    Laser hair removal designed for comfort, safety, and
+                    Permanent hair removal designed for comfort, safety, and
                     long-lasting smoothness
                   </span>
                 </li>
