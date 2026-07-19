@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import SkinScript from "../Components/SkinScript";
 
 type Section = {
@@ -9,8 +9,6 @@ type Section = {
 };
 
 export default function ServicesOverview() {
-  const navigate = useNavigate();
-
   const sections: Section[] = useMemo(
     () => [
       {
@@ -46,13 +44,13 @@ export default function ServicesOverview() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={() => navigate("/services")}
+        {/* Swapped button for Link for SEO */}
+        <Link
+          to="/services"
           className="hidden sm:inline-flex items-center justify-center rounded-2xl border border-border bg-white px-4 py-2 text-sm font-semibold text-ink shadow-sm hover:bg-neutral-50 transition"
         >
           View all
-        </button>
+        </Link>
       </div>
 
       <div className="mt-6 mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -74,26 +72,26 @@ export default function ServicesOverview() {
 
             {/* Bottom actions pinned */}
             <div className="mt-auto pt-6 flex items-center justify-between">
-              <button
-                type="button"
-                onClick={() => navigate(`/services#${s.id}`)}
+              {/* Swapped button for Link to allow crawlers to find the hash links */}
+              <Link
+                to={`/services#${s.id}`}
                 className="inline-flex items-center justify-center rounded-2xl bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition"
               >
                 Learn more
-              </button>
+              </Link>
             </div>
           </div>
         ))}
       </div>
 
       <div className="mt-6 mb-6 sm:hidden">
-        <button
-          type="button"
-          onClick={() => navigate("/services")}
+        {/* Swapped button for Link for SEO */}
+        <Link
+          to="/services"
           className="w-full inline-flex items-center justify-center rounded-2xl border border-border bg-white px-4 py-3 text-sm font-semibold text-ink shadow-sm hover:bg-neutral-50 transition"
         >
           View all services
-        </button>
+        </Link>
       </div>
       <SkinScript />
     </section>

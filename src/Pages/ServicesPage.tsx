@@ -1,10 +1,6 @@
-import { BackToTopButton } from "../Components/BackToTopButton";
+// Pages/ServicesPage.tsx
 import Service from "../Components/Services";
+
 export default function Services() {
-  return (
-    <>
-      <BackToTopButton />
-      <Service />
-    </>
-  );
+  return <Service />;
 }

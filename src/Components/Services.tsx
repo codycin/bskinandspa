@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useSEO } from "../hooks/useSEO";
 import teethImg from "../assets/TeethWhiteningPicture2.webp";
 import skinImg from "../assets/FaceMaskWoman.png";
 import electrolysisImg from "../assets/Electrolysis.webp";
@@ -10,8 +11,7 @@ import microneedlingBA from "../Assets/MicroneedlingBA.webp";
 import SkinScript from "./SkinScript";
 
 const BOOKING_URL =
-  "https://thepalmsdayspa.mysalononline.com/Booking/?sid=0&guid=a057c4c1-3a24-463e-a2a5-a43ce593a20a&customerId=32864";
-
+  "https://www.fresha.com/book-now/b-skin-and-body-ch9ut76c/all-offer?share=true&pId=2843485";
 type Section = {
   id: string;
   label: string;
@@ -30,6 +30,14 @@ type ServiceItem = {
 
 export default function Services() {
   const navigate = useNavigate();
+
+  // Injecting service-specific local SEO metadata
+  useSEO({
+    title:
+      "Med Spa Services | Facials, Microneedling & Electrolysis in Debary, FL",
+    description:
+      "Explore professional med spa services at B Skin & Body in Debary. We offer teeth whitening, dermaplaning, chemical peels, microneedling, and permanent hair removal via electrolysis.",
+  });
 
   const sections: Section[] = useMemo(
     () => [
@@ -274,7 +282,7 @@ export default function Services() {
       name: "Electrolysis",
       description:
         "Permanent hair removal using an FDA-approved method that disables the follicle’s ability to regrow hair.",
-      price: "$40 / 15 minutes",
+      price: "$40 / 15min | $80 / 30min | $120 / 45min | $160 / 60min",
       highlights: [
         "FDA-approved method of permanent hair removal",
         "Permanently destroys the follicle’s ability to regrow hair",
@@ -412,7 +420,8 @@ export default function Services() {
               title="Teeth Whitening"
               subtitle="You always wear your smile. Why not make it brighter?"
               imageSrc={teethImg}
-              imageAlt="Teeth whitening treatment"
+              imageAlt="Professional teeth whitening treatment results"
+              isFirstImage={true} // Passed flag to trigger eager loading
             >
               <ServiceList items={TEETH} />
             </ServiceCard>
@@ -424,7 +433,7 @@ export default function Services() {
               title="Skin"
               subtitle="You’re already radiant on the inside—let your skin match."
               imageSrc={skinImg}
-              imageAlt="Facial treatment in a clean clinic setting"
+              imageAlt="Relaxing facial treatment at a med spa in Debary"
             ></ServiceCard>
           </section>
 
@@ -447,7 +456,7 @@ export default function Services() {
               title="Dermaplaning"
               subtitle="Manual exfoliation for smoother texture and better product absorption."
               highlights={DERMAPLANING_HIGHLIGHTS}
-              imageAlt="Dermaplaning for clear skin"
+              imageAlt="Dermaplaning facial tool exfoliating skin"
               imageSrc={dermaplaningImg}
             />
 
@@ -475,7 +484,7 @@ export default function Services() {
               <div className="relative w-full rounded-xl overflow-hidden">
                 <img
                   src={microneedlingBA}
-                  alt="Microneedling before and after results"
+                  alt="Microneedling before and after skin texture results"
                   className="w-full h-full object-cover"
                   loading="lazy"
                 />
@@ -493,7 +502,7 @@ export default function Services() {
               subtitle="Refine tone and texture with peel depth tailored to your skin."
               highlights={PEELS_HIGHLIGHTS}
               imageSrc={chemicalPeel}
-              imageAlt="Chemical peel for skincare"
+              imageAlt="Chemical peel skincare application process"
             />
 
             <GridServiceList items={PEELS} />
@@ -505,7 +514,7 @@ export default function Services() {
               title="Electrolysis"
               subtitle="Permanent hair removal for all skin types and hair colors."
               imageSrc={electrolysisImg}
-              imageAlt="Electrolysis hair removal treatment"
+              imageAlt="Electrolysis permanent hair removal treatment process"
             >
               <ServiceList items={ELECTROLYSIS} />
             </ServiceCard>
@@ -524,12 +533,14 @@ function ServiceCard({
   subtitle,
   imageSrc,
   imageAlt,
+  isFirstImage = false,
   children,
 }: {
   title: string;
   subtitle: string;
   imageSrc?: string;
   imageAlt?: string;
+  isFirstImage?: boolean;
   children?: React.ReactNode;
 }) {
   return (
@@ -545,7 +556,8 @@ function ServiceCard({
                 src={imageSrc}
                 alt={imageAlt ?? title}
                 className="absolute inset-0 h-full w-full object-cover"
-                loading="lazy"
+                loading={isFirstImage ? "eager" : "lazy"} // Conditional loading
+                fetchPriority={isFirstImage ? "high" : "auto"} // Conditional fetch priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
@@ -635,7 +647,6 @@ function ServiceList({ items }: { items: ServiceItem[] }) {
   return (
     <div className="mt-5 space-y-4">
       {items.map((item) => {
-        // 🔥 IMAGE CARD VERSION
         if (item.imageSrc) {
           return (
             <div
@@ -645,7 +656,7 @@ function ServiceList({ items }: { items: ServiceItem[] }) {
               <div className="relative w-full aspect-[4/3]">
                 <img
                   src={item.imageSrc}
-                  alt={item.name}
+                  alt={`${item.name} demonstration`} // Better fallback alt text
                   className="absolute inset-0 block h-full w-full object-cover"
                   loading="lazy"
                 />
@@ -665,14 +676,13 @@ function ServiceList({ items }: { items: ServiceItem[] }) {
           );
         }
 
-        // 🔹 NORMAL CARD VERSION
         return (
           <div
             key={item.name}
             className="rounded-2xl border border-border bg-white/60 p-5"
           >
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-              <div>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex-1">
                 <div className="text-base font-semibold text-ink">
                   {item.name}
                 </div>
@@ -680,13 +690,31 @@ function ServiceList({ items }: { items: ServiceItem[] }) {
                 <Highlights items={item.highlights} />
               </div>
 
+              {/* UPDATED PRICING BLOCK */}
               {(item.price || item.duration) && (
-                <div className="shrink-0 rounded-xl border border-border bg-card/60 px-3 py-2 text-sm">
+                <div className="shrink-0 rounded-xl border border-border bg-card/60 px-4 py-3 text-sm min-w-[120px]">
                   {item.price && (
-                    <div className="font-semibold text-ink">{item.price}</div>
+                    <div className="font-semibold text-ink flex flex-col gap-1">
+                      {/* We check if the price includes our separator (|). 
+                          If yes, we split it into an array and map over it to stack them.
+                          If no, we just show the normal string.
+                      */}
+                      {item.price.includes("|")
+                        ? item.price.split("|").map((priceTier, index) => (
+                            <span
+                              key={index}
+                              className="block whitespace-nowrap"
+                            >
+                              {priceTier.trim()}
+                            </span>
+                          ))
+                        : item.price}
+                    </div>
                   )}
                   {item.duration && (
-                    <div className="text-xs text-muted">{item.duration}</div>
+                    <div className="mt-1 text-xs text-muted border-t border-border pt-1">
+                      {item.duration}
+                    </div>
                   )}
                 </div>
               )}
@@ -700,8 +728,8 @@ function ServiceList({ items }: { items: ServiceItem[] }) {
               <a
                 href={BOOKING_URL}
                 target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center rounded-full bg-primary px-2.5 py-2.5
+                rel="noopener noreferrer" // Added noopener!
+                className="inline-flex items-center justify-center rounded-full bg-primary px-4 py-2.5
                 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-hover"
               >
                 Book Now
@@ -718,7 +746,6 @@ function GridServiceList({ items }: { items: ServiceItem[] }) {
   return (
     <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
       {items.map((item) => {
-        // 🔥 IMAGE CARD
         if (item.imageSrc) {
           return (
             <div
@@ -728,7 +755,7 @@ function GridServiceList({ items }: { items: ServiceItem[] }) {
               <div className="relative w-full aspect-[4/3]">
                 <img
                   src={item.imageSrc}
-                  alt={item.name}
+                  alt={`${item.name} result`}
                   className="absolute inset-0 block h-full w-full object-cover"
                   loading="lazy"
                 />

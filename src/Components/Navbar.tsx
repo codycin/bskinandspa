@@ -6,7 +6,7 @@ import logo from "../Assets/TitleLogo.webp";
 import icon from "../Assets/Icon.webp";
 
 const BOOKING_URL =
-  "https://thepalmsdayspa.mysalononline.com/Booking/?sid=0&guid=a057c4c1-3a24-463e-a2a5-a43ce593a20a&customerId=32864";
+  "https://www.fresha.com/book-now/b-skin-and-body-ch9ut76c/all-offer?share=true&pId=2843485";
 
 type NavItem = { label: string; to: string };
 
@@ -20,7 +20,7 @@ const NAV_ITEMS: NavItem[] = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
-  // Optional but recommended: prevent background scroll when drawer is open
+  // Prevent background scroll when drawer is open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -28,7 +28,7 @@ export default function Navbar() {
     };
   }, [open]);
 
-  // Optional: close on Escape
+  // Close on Escape
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
@@ -45,24 +45,27 @@ export default function Navbar() {
           <div className="h-16 flex items-center">
             {/* Left: Desktop links */}
             <nav className="hidden lg:flex items-center gap-6 w-1/3">
-              {NAV_ITEMS.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.to === "/"}
-                  className={({ isActive }) =>
-                    [
-                      "px-1 py-2 text-sm font-medium tracking-wide transition-colors",
-                      "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-                      isActive
-                        ? "text-ink border-b-2 border-primary"
-                        : "text-muted hover:text-ink border-b-2 border-transparent",
-                    ].join(" ")
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              ))}
+              <ul className="flex gap-6">
+                {NAV_ITEMS.map((item) => (
+                  <li key={item.to}>
+                    <NavLink
+                      to={item.to}
+                      end={item.to === "/"}
+                      className={({ isActive }) =>
+                        [
+                          "px-1 py-2 text-sm font-medium tracking-wide transition-colors",
+                          "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                          isActive
+                            ? "text-ink border-b-2 border-primary"
+                            : "text-muted hover:text-ink border-b-2 border-transparent",
+                        ].join(" ")
+                      }
+                    >
+                      {item.label}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
             </nav>
 
             {/* Mobile: Hamburger (left) */}
@@ -83,9 +86,13 @@ export default function Navbar() {
                   <div className="h-0.5 w-5 bg-ink" />
                 </div>
               </button>
+
+              {/* Added eager loading to mobile icon */}
               <img
                 src={icon}
-                alt="B Skin & Body logo"
+                alt="B Skin and Body Spa Icon"
+                loading="eager"
+                fetchPriority="high"
                 className="block md:hidden h-12 w-auto object-contain"
               />
             </div>
@@ -96,15 +103,21 @@ export default function Navbar() {
                 to="/"
                 className="flex items-center gap-3 leading-none"
                 onClick={() => setOpen(false)}
+                aria-label="Home page"
               >
+                {/* Added eager loading to desktop icon and text logo */}
                 <img
                   src={icon}
-                  alt="B Skin & Body logo"
+                  alt="B Skin and Body Spa Icon"
+                  loading="eager"
+                  fetchPriority="high"
                   className="hidden md:block h-12 w-auto object-contain"
                 />
                 <img
                   src={logo}
-                  alt="Skin & Body logo"
+                  alt="B Skin and Body Text Logo"
+                  loading="eager"
+                  fetchPriority="high"
                   className="block h-10 w-auto object-contain relative -bottom-1"
                 />
               </NavLink>
@@ -136,7 +149,7 @@ export default function Navbar() {
         {/* Backdrop (click outside to close) */}
         <button
           type="button"
-          aria-label="Close menu"
+          aria-label="Close menu backdrop"
           onClick={() => setOpen(false)}
           className={[
             "fixed inset-0 z-40 bg-black/30 backdrop-blur-sm transition-opacity",
@@ -156,7 +169,7 @@ export default function Navbar() {
           ].join(" ")}
           role="dialog"
           aria-modal="true"
-          aria-label="Mobile navigation"
+          aria-label="Mobile navigation menu"
         >
           {/* Drawer header */}
           <div className="h-16 px-4 flex items-center border-b border-border">
@@ -164,12 +177,12 @@ export default function Navbar() {
             <div className="flex items-center gap-2 leading-none flex-1 min-w-0 overflow-hidden">
               <img
                 src={icon}
-                alt="B Skin & Body logo"
+                alt="" // Empty alt because this is decorative and redundant in the drawer
                 className="block h-10 w-auto flex-shrink-0"
               />
               <img
                 src={logo}
-                alt="Skin & Body logo"
+                alt="" // Empty alt because this is decorative and redundant in the drawer
                 className="block h-8 w-auto flex-shrink min-w-0 object-contain -bottom-1"
               />
             </div>
@@ -188,24 +201,27 @@ export default function Navbar() {
 
           {/* Links */}
           <nav className="p-2">
-            {NAV_ITEMS.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.to === "/"}
-                onClick={() => setOpen(false)}
-                className={({ isActive }) =>
-                  [
-                    "block rounded-xl px-4 py-3 text-sm font-medium transition-colors",
-                    isActive
-                      ? "text-ink bg-primary/10"
-                      : "text-muted hover:text-ink hover:bg-card/60",
-                  ].join(" ")
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
+            <ul className="flex flex-col space-y-1">
+              {NAV_ITEMS.map((item) => (
+                <li key={item.to}>
+                  <NavLink
+                    to={item.to}
+                    end={item.to === "/"}
+                    onClick={() => setOpen(false)}
+                    className={({ isActive }) =>
+                      [
+                        "block rounded-xl px-4 py-3 text-sm font-medium transition-colors",
+                        isActive
+                          ? "text-ink bg-primary/10"
+                          : "text-muted hover:text-ink hover:bg-card/60",
+                      ].join(" ")
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
           </nav>
 
           <div className="flex gap-5 items-center mt-auto p-4 border-t border-border text-muted">

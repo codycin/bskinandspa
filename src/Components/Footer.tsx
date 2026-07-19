@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
-
 const BOOKING_URL =
-  "https://thepalmsdayspa.mysalononline.com/Booking/?sid=0&guid=a057c4c1-3a24-463e-a2a5-a43ce593a20a&customerId=32864";
+  "https://www.fresha.com/book-now/b-skin-and-body-ch9ut76c/all-offer?share=true&pId=2843485";
 
 export default function Footer() {
-  const navigate = useNavigate();
+  {
+    /* FIXED: Removed the unused useNavigate hook */
+  }
 
   return (
     <footer className="mt-20 border-t border-border bg-card/60 backdrop-blur">
@@ -58,7 +58,8 @@ export default function Footer() {
               <a
                 href={BOOKING_URL}
                 target="_blank"
-                rel="noreferrer"
+                // FIXED: Added noopener for better security
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full
                             bg-primary 
                             px-4 py-3 text-sm
